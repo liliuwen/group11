@@ -78,8 +78,11 @@ public class CartServiceImpl implements CartService {
 
                 // 判断是否购买过同样的商品
                 if (orderItem != null){ // 购买过同样的商品
-                    // 购买数量相加
-                    orderItem.setNum(orderItem.getNum() + num);
+                    if(num > 1){
+                        orderItem.setNum(num);
+                    }else {
+                        orderItem.setNum(orderItem.getNum() + num);
+                    }
                     // 计算小计金额
                     orderItem.setTotalFee(new BigDecimal(orderItem.getNum()
                             * orderItem.getPrice().doubleValue()));
