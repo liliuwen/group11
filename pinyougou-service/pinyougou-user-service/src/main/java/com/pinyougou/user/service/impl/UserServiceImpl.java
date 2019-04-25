@@ -3,7 +3,13 @@ package com.pinyougou.user.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.pinyougou.common.util.HttpClientUtils;
+import com.pinyougou.mapper.AreasMapper;
+import com.pinyougou.mapper.CitiesMapper;
+import com.pinyougou.mapper.ProvincesMapper;
 import com.pinyougou.mapper.UserMapper;
+import com.pinyougou.pojo.Areas;
+import com.pinyougou.pojo.Cities;
+import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -11,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.*;
@@ -37,6 +44,12 @@ public class UserServiceImpl implements UserService {
     private String templateCode;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private ProvincesMapper provincesMapper;
+    @Autowired
+    private CitiesMapper citiesMapper;
+    @Autowired
+    private AreasMapper areasMapper;
 
     @Override
     public void save(User user) {
@@ -56,7 +69,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(User user) {
+        try{
+            // 密码加密
+            user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+            // 创建时间
+            user.setCreated(new Date());
+            // 修改时间
+            user.setUpdated(user.getCreated());
 
+
+            Example example =new Example(User.class);
+
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("username",user.getUsername());
+
+            // 添加数据
+            int i = userMapper.updateByExampleSelective(user, example);
+
+        } catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -127,6 +159,77 @@ public class UserServiceImpl implements UserService {
             return code.equals(oldCode);
         }catch (Exception ex){
             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        try {
+            User user = new User();
+            user.setUsername(username);
+            return userMapper.selectOne(user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** 获取省份选项*/
+    @Override
+    public List<Map<String,String>> findAllProvince() {
+        try {
+            List<Provinces> provinces = provincesMapper.selectAll();
+            List<Map<String,String>> data = new ArrayList<>();
+            for (Provinces province : provinces) {
+                Map<String,String> map = new HashMap<>();
+                map.put("id",province.getProvinceId().toString());
+                map.put("name",province.getProvince());
+                data.add(map);
+            }
+            return data;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**  根据省份查询城市*/
+    @Override
+    public List<Map<String, String>> findCityByProvince(String provinceId) {
+        try {
+            Cities cities = new Cities();
+            cities.setProvinceId(provinceId);
+            List<Cities> citiesList = citiesMapper.select(cities);
+
+            List<Map<String,String>> data = new ArrayList<>();
+            for (Cities city: citiesList) {
+                Map<String,String> map = new HashMap<>();
+                map.put("id",city.getCityId().toString());
+                map.put("name",city.getCity());
+                data.add(map);
+            }
+            return data;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**  根据城市查询区域*/
+    @Override
+    public List<Map<String, String>> findAreaByCity(String areaId) {
+        try {
+            Areas areas = new Areas();
+            areas.setCityId(areaId);
+            List<Areas> areaList = areasMapper.select(areas);
+
+            List<Map<String,String>> data = new ArrayList<>();
+            for (Areas area: areaList) {
+                Map<String,String> map = new HashMap<>();
+                map.put("id",area.getAreaId().toString());
+                map.put("name",area.getArea());
+                data.add(map);
+            }
+            return data;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
