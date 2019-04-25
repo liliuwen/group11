@@ -31,12 +31,12 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
+
         <!-- FastDFS的java客户端 -->
         <dependency>
             <groupId>org.csource</groupId>
             <artifactId>fastdfs-client</artifactId>
         </dependency>
-
         <!-- activemq-client -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
