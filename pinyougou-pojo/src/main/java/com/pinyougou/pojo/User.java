@@ -54,6 +54,26 @@ public class User implements Serializable{
     private Date birthday;
 	@Column(name="last_login_time")
     private Date lastLoginTime;
+	@Column(name = "address")
+    private String address;
+	@Column(name = "profession")
+    private String profession;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
 	private String rePassword;
 
     public String getRePassword() {

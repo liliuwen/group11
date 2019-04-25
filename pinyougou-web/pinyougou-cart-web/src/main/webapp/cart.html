@@ -68,10 +68,11 @@
 		</div>
 		<!--All goods-->
 		<div class="allgoods">
-			<h4>全部商品<span>11</span></h4>
+			<h4>全部商品<span></span></h4>
 			<div class="cart-main">
 				<div class="yui3-g cart-th">
-					<div class="yui3-u-1-4"><input type="checkbox" name="" value="" /> 全部</div>
+					<div class="yui3-u-1-4"><input type="checkbox" ng-model="selectAll"
+												   ng-checked="selected" ng-click="changeAll()" /> 全部</div>
 					<div class="yui3-u-1-4">商品</div>
 					<div class="yui3-u-1-8">单价（元）</div>
 					<div class="yui3-u-1-8">数量</div>
@@ -81,7 +82,8 @@
 				<!-- 迭代产生商家 -->
 				<div class="cart-item-list" ng-repeat="cart in carts">
 					<div class="cart-shop">
-						<input type="checkbox" name="" value="" />
+						<input type="checkbox" ng-checked="selectCart"
+							   ng-click="sellerCart(m[cart.id])" ng-model="m[cart.id]" />
 						<span class="shopname self">{{cart.sellerName}}</span>
 					</div>
 					<div class="cart-body">
@@ -89,7 +91,7 @@
 						<div class="cart-list" ng-repeat="orderItem in cart.orderItems">
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">
-									<input type="checkbox" name="" value="" />
+									<input type="checkbox" ng-model="orderItem.itemId" />
 								</li>
 								<li class="yui3-u-11-24">
 									<div class="good-item">
@@ -103,9 +105,10 @@
 								</li>
 								<li class="yui3-u-1-8">
 									<a href="javascript:void(0)"
-									   ng-click="addCart(orderItem.itemId, -1)"
+									   ng-click="addCart(orderItem.itemId, - 1)"
 									   class="increment mins">-</a>
-									<input type="text" ng-model="orderItem.num" class="itxt" />
+									<input type="text" ng-model="orderItem.num"
+										   ng-blur="changeNum(orderItem.itemId,orderItem.num)" class="itxt"/>
 									<a href="javascript:void(0)"
 									   ng-click="addCart(orderItem.itemId, 1)"
 									   class="increment plus">+</a>
@@ -127,7 +130,7 @@
 			</div>
 			<div class="cart-tool">
 				<div class="select-all">
-					<input type="checkbox" name="" value="" />
+					<input type="checkbox" checked="" />
 					<span>全选</span>
 				</div>
 				<div class="option">
@@ -431,6 +434,7 @@
 		</div>
 	</div>
 </div>
+
 <!--页面底部END-->
 
 <script src="/js/plugins/jquery/jquery.min.js"></script>

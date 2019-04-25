@@ -3,6 +3,8 @@ package com.pinyougou.service;
 import com.pinyougou.pojo.User;
 import java.util.List;
 import java.io.Serializable;
+import java.util.Map;
+
 /**
  * UserService 服务接口
  * @date 2019-03-28 09:58:00
@@ -36,4 +38,13 @@ public interface UserService {
 
 	/** 检验验证码是否正确 */
 	boolean checkSmsCode(String phone, String code);
+
+	User findUserByUsername(String username);
+
+	List<Map<String,String>> findAllProvince();
+
+	List<Map<String,String>> findCityByProvince(String provinceId);
+
+	List<Map<String, String>> findAreaByCity(String areaId);
+
 }
