@@ -4,6 +4,8 @@ app.controller('cartController', function ($scope, $controller, baseService) {
     // 继承baseController
     $controller('baseController', {$scope : $scope});
 
+    $scope.arrStr = [];
+    var sellerCartsData = [];
     // 查询购物车
     $scope.findCart = function () {
         baseService.sendGet("/cart/findCart").then(function(response){
@@ -11,20 +13,7 @@ app.controller('cartController', function ($scope, $controller, baseService) {
             $scope.carts = response.data;
             // 定义json对象封装统计的数据
             $scope.totalEntity = {totalNum : 0, totalMoney : 0};
-            // 迭代用户的购物车集合
-            for (var i = 0; i < $scope.carts.length; i++){
-                // 获取商家的购物车
-                var cart = $scope.carts[i];
-                // 迭代商家购物车中的商品
-                for (var j = 0; j < cart.orderItems.length; j++){
-                    // 获取购买的商品
-                    var orderItem = cart.orderItems[j];
-                    // 统计购买数量
-                    $scope.totalEntity.totalNum += orderItem.num;
-                    // 统计总金额
-                    $scope.totalEntity.totalMoney += orderItem.totalFee;
-                }
-            }
+            $scope.payData();
         });
     };
 
@@ -49,41 +38,114 @@ app.controller('cartController', function ($scope, $controller, baseService) {
         }
     };
 
-    $scope.m = [];
-    $scope.checked=[];
-    //默认选择框未选中
-    $scope.selectAll = false;
 
-    $scope.changeAll = function () {
-        if(selectAll == true){
-            $scope.selectCart = true;
-            $scope.checked=[];
-            angular.forEach($scope.carts, function (cart, index) {
-                $scope.checked.push(cart.id);
-                $scope.m[cart.id] = true;
-            })
-        }else {
-            $scope.selectCart = false;
-            $scope.checked = [];
-            $scope.m = [];
+    // $scope.selectOne = function ($event,itemId,num,totalFee) {
+    //     var data = {itemId : "", num : "", totalFee : ""};
+    //     if($event.target.checked){
+    //         data.itemId = itemId;
+    //         data.num = num;
+    //         data.totalFee = totalFee;
+    //         arrStr.push(data);
+    //         alert(JSON.stringify(arrStr));
+    //         $scope.totalEntity.totalNum += num;
+    //         $scope.totalEntity.totalMoney += totalFee;
+    //     }else {
+    //         var idx = arrStr.indexOf(itemId);
+    //         arrStr.splice(idx,1);
+    //         $scope.payData();
+    //         alert(JSON.stringify(arrStr));
+    //     }
+    // };
+
+    $scope.payData = function () {
+        $scope.totalEntity.totalNum = 0;
+        $scope.totalEntity.totalMoney = 0;
+        for(var i = 0 ; i < $scope.arrStr.length ; i++){
+            $scope.totalEntity.totalNum += $scope.arrStr[i].num;
+            $scope.totalEntity.totalMoney += $scope.arrStr[i].totalFee;
         }
-        console.log($scope.checked);
     };
 
-    $scope.sellerCart = function (cart) {
-        angular.forEach($scope.m, function (i, id) {
-            var index = $scope.checked.indexOf(id);
-            if(i && index === -1){
-                $scope.checked.push(id);
-            }else if(!i && index !== -1){
-                $scope.checked.splice(index,1);
-            };
-        });
-        if($scope.carts.length === $scope.checked.length){
-            $scope.selectAll = true;
-        }else {
-            $scope.selectAll = false;
-        }
-        console.log($scope.checked);
+    $scope.selectCart = function ($event,sellerName) {
+
     };
+
+//checkbox全选单选
+    $scope.selected = [] ;//定义一个数组
+    //全选方法，并将所有的id一并传入selected数组中
+    $scope.all = function($event,data){
+        var checkbox = $event.target ;
+        var checked = checkbox.checked ;
+        if(checked){
+            $scope.x = true;
+            $scope.y = true;
+            for(var key in data){
+                if($scope.selected.indexOf(data[key].sellerName)>=0){//判断数组中是否重复存在
+                    continue;
+                }else{
+                    $scope.selected.push(data[key].sellerName);
+                }
+            }
+            console.log($scope.selected);
+            console.log($scope.arrStr);
+        }
+        else{
+            $scope.x = false;
+            $scope.y = false;
+            $scope.selected=[];
+        }
+    };
+
+    $scope.updateSelection = function($event,sellerName){ //单选更新selected
+        var checkbox = $event.target;
+        var checked = checkbox.checked ;
+        if(checked){
+            $scope.selected.push(sellerName);
+            $scope.y = true;
+        }else{
+                var idx = $scope.selected.indexOf(sellerName) ;
+                $scope.selected.splice(idx,1);
+            $scope.y = false;
+            }
+        console.log($scope.selected);
+        };
+
+
+
+    $scope.oneSelection = function ($event,itemId,num,totalFee) {
+        var checkbox = $event.target;
+        var checked = checkbox.checked;
+        if($scope.y == true){
+            checked = checked;
+        }
+        if (checked) {
+            var data = {itemId: "", num: "", totalFee: ""};
+            data.itemId = itemId;
+            data.num = num;
+            data.totalFee = totalFee;
+            $scope.arrStr.push(data);
+            alert(JSON.stringify($scope.arrStr));
+            $scope.totalEntity.totalNum += num;
+            $scope.totalEntity.totalMoney += totalFee;
+        } else {
+            var idx = $scope.arrStr.indexOf(itemId);
+            $scope.arrStr.splice(idx, 1);
+            $scope.payData();
+            alert(JSON.stringify($scope.arrStr));
+        }
+    };
+
+    //批量删除
+    $scope.seletedDelete = function(){
+        if($scope.arrStr.length == 0){
+            alert("请选择要删除的商品")
+        }else {
+            if(confirm("确认删除？")){
+                for(var i = 0 ; i < $scope.arrStr.length ; i++){
+                    var num = -($scope.arrStr[i].num);
+                    $scope.addCart($scope.arrStr[i].itemId,num);
+                }
+            }
+        }
+    }
 });
