@@ -191,15 +191,4 @@ public class AddressServiceImpl implements AddressService {
         }
     }
 
-    @Override
-    public List<Provinces> findProvinceByProvinceId(String provinceId) {
-        try {
-            Provinces provinces = new Provinces();
-            provinces.setProvinceId(provinceId);
-            List<Provinces> select = provincesMapper.select(provinces);
-            return select;
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
-    }
 }
