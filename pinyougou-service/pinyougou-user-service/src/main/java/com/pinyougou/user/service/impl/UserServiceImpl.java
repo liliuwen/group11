@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
             // 修改时间
             user.setUpdated(user.getCreated());
 
-
             Example example =new Example(User.class);
 
             Example.Criteria criteria = example.createCriteria();

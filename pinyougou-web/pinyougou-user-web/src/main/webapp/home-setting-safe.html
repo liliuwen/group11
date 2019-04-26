@@ -9,18 +9,13 @@
 
     <link rel="stylesheet" type="text/css" href="/css/pages-seckillOrder.css"/>
 
+    <!--密码规格提示样式-->
+    <link rel="stylesheet" type="text/css" href="css/home-setting-safe.css">
+
     <script src="/plugins/angularjs/angular.min.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/service/baseService.js"></script>
     <script src="/js/controller/settingSafeController.js"></script>
-
-
-    <!--jQuery表单检验插件-->
-    <script src="/plugins/jquery-validation-1.19.0/lib/jquery.js"></script>
-    <script src="/plugins/jquery-validation-1.19.0/dist/jquery.validate.min.js"></script>
-    <!--jQuery中文信息插件-->
-    <script src="/plugins/jquery-validation-1.19.0/dist/localization/messages_zh.js"></script>
-
 </head>
 <body ng-app="pinyougou"
       ng-controller="settingSafeController"
@@ -68,7 +63,7 @@
             <div class="py-container">
                 <div class="yui3-g Logo">
                     <div class="yui3-u Left logoArea">
-                        <a class="logo-bd" title="品优购" href="http://pinyougou.com" target="_blank"></a>
+                        <a class="logo-bd" title="品优购" href="JD-index.html" target="_blank"></a>
                     </div>
                     <div class="yui3-u Center searchArea">
                         <div class="search">
@@ -147,8 +142,66 @@
         }, function () {
             $("#shopcarlist").hide();
         });
+
     })
 </script>
+
+<script type="text/javascript" src="/js/plugins/jquery.easing/jquery.easing.min.js"></script>
+
+<script type="text/javascript" src="js/plugins/sui/sui.min.js"></script>
+
+<script type="text/javascript" src="/js/widget/nav.js"></script>
+
+<script type="text/javascript">
+
+    function checkBoth() {
+        alert("测试结果为：" + checkPwd());
+        if (!checkPwd()) {
+            // $('#subInfo').attr("disabled", "disabled");
+            $('#inputPassword').val('');
+            $('#inputRepassword').val('');
+        } else {
+            $('#subInfo').removeAttr("disabled");
+            $('#inputPassword').val('');
+            $('#inputRepassword').val('');
+        }
+    }
+
+    //检查密码是否一致
+    function checkPwd() {
+//密码正则表达式
+        var reg = /^[\w_-]{6,16}$/;
+//trim函数的作用是去除空格
+        var pwd = $.trim($('#inputPassword').val());
+        var rpwd = $.trim($("#inputRepassword").val());
+
+//校验密码只能输入6-16(包含大小写字母，数字，- 或者 _ )
+        if (!reg.exec(pwd)) {
+            $("#msg_pwd").html("&nbsp;&nbsp;<font color='red'>密码格式不正确</font>");
+            return false;
+        }
+        if (rpwd != "") {
+            if (pwd == "" && rpwd == "") {
+//若都为空，则提示密码不能为空，为了用户体验（在界面上用required同时做了处理）
+                $("#msg_pwd").html("&nbsp;&nbsp;<font color='red'>密码不能为空</font>");
+// alert("密码不能为空:false");
+                return false;
+            }
+            else {
+                if (pwd == rpwd) {//相同则提示密码匹配
+                    $("#msg_pwd").html("&nbsp;&nbsp;<img src='img/true.jpg' width='20' height='21'/>");
+// alert("密码匹配正确:true");
+                    return true;
+                } else {//不相同则提示密码匹配
+                    $("#msg_pwd").html("&nbsp;&nbsp;<font color='red'>密码不一致</font>");
+// alert("密码不一致:false");
+                    return false;
+                }
+            }
+        }
+    }
+</script>
+
 
 </body>
 <!--header-->
@@ -209,8 +262,11 @@
                                                ng-model="user.password"
                                                placeholder="新密码"
                                                id="inputPassword"
-                                               data-rule-remote="php.php"/>
-                                        <span id="pwdInfo"></span>
+                                               data-rule-remote="php.php"/>&nbsp;&nbsp;
+                                    </div>
+                                    <div class="controls bg-warring">
+                                        <img src="img/bg-logo.png"/>
+                                        <span>密码只能输入6-16(包含大小写字母，数字，- 或者 _ )</span>
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -219,23 +275,30 @@
                                         <input class="fn-tinput"
                                                type="password"
                                                id="inputRepassword"
-                                               ng-model="user.rePassword"
-                                               placeholder="确认新密码">
+                                               placeholder="确认新密码"><span id="msg_pwd"></span>
                                     </div>
                                 </div>
 
                                 <div class="control-group">
                                     <label class="control-label"></label>
                                     <div class="controls">
+                                        <!--controls-->
                                         <button type="submit"
                                                 class="sui-btn btn-primary"
-                                                ng-click="updatePwd();">提交按钮
+                                                onclick="checkBoth()">测试
+                                            <!--ng-click="update();"-->
+                                        </button>
+                                        <button type="submit"
+                                                id="subInfo"
+                                                class="sui-btn btn-primary"
+                                                ng-click="updatePwd()">修改密码
                                         </button>
                                     </div>
                                 </div>
                             </form>
                             <div>{{user}}</div>
                         </div>
+                        <!--绑定手机-->
                         <div id="two" class="tab-pane">
                             <!--步骤条-->
                             <div class="sui-steps steps-auto">
