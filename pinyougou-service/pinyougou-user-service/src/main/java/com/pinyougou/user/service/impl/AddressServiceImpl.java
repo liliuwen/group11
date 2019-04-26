@@ -154,4 +154,52 @@ public class AddressServiceImpl implements AddressService {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 设置默认地址
+     * @param status
+     */
+    @Override
+    public void setDefaultAddress(String loginName,Long id ,String status) {
+        try {
+            /** 查询当前的默认地址 */
+            //创建示范对象
+            Example example = new Example(Address.class);
+            //创建查询对象
+            Example.Criteria criteria = example.createCriteria();
+            //添加查询条件
+            criteria.andEqualTo("isDefault","1");
+            criteria.andEqualTo("userId",loginName);
+            //得到当前的默认地址
+            List<Address> addresses = addressMapper.selectByExample(example);
+            //判断集合是否有数据
+            if(addresses != null && addresses.size() > 0) {
+                for (Address address : addresses) {
+                    //把默认地址修改为非默认状态
+                    address.setIsDefault("0");
+                    addressMapper.updateByPrimaryKeySelective(address);
+                }
+            }
+            Address address = new Address();
+            //封装修改条件
+            address.setIsDefault(status);
+            address.setId(id);
+            //修改默认状态
+            addressMapper.updateByPrimaryKeySelective(address);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public List<Provinces> findProvinceByProvinceId(String provinceId) {
+        try {
+            Provinces provinces = new Provinces();
+            provinces.setProvinceId(provinceId);
+            List<Provinces> select = provincesMapper.select(provinces);
+            return select;
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
 }

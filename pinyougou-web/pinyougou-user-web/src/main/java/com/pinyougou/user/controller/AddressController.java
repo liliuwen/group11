@@ -101,4 +101,29 @@ public class AddressController {
         }
         return false;
     }
+
+    /**
+     * 设置默认地址
+     */
+    @GetMapping("/user/setDefaultAddress")
+    public boolean setDefaultAddress(Long id,String isDefault) {
+        try{
+            //获取登录用户名
+            SecurityContext context = SecurityContextHolder.getContext();
+            String loginName = context.getAuthentication().getName();
+            addressService.setDefaultAddress(loginName,id,isDefault);
+            return true;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 根据省ID查询省
+     */
+    @GetMapping("/user/findProviceByProviceId")
+    public List<Provinces> findProvinceByProvinceId(String proviceId){
+      return addressService.findProvinceByProvinceId(proviceId);
+    }
 }
