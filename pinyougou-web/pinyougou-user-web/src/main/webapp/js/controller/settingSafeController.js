@@ -28,7 +28,7 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
     $scope.getUserPhoneNo = function () {
         baseService.sendGet("/user/info/get").then(function (respose){
             if (respose.data != null){
-                $scope.bindTelInfo.user
+                $scope.bindTelInfo.user = "";
             }
         });
     };
