@@ -46,4 +46,9 @@ public interface AddressService {
 
 	/** 根据市ID查询区 */
 	List<Areas> getAreas(String cityId);
+
+	/** 设置默认地址 */
+    void setDefaultAddress(String loginName, Long id, String status);
+
+    List<Provinces> findProvinceByProvinceId(String provinceId);
 }

@@ -77,11 +77,26 @@ app.controller('addressController',function ($scope,$controller,baseService) {
         //查询省份信息
         $scope.findProvinces();
     };
+    
     /**
      * 新增或修改地址
      */
     $scope.entity = {};
     $scope.saveOrUpdate = function () {
+        //对用户输入的信息作判断
+        if($scope.entity.contact == null || $scope.entity.contact == "") {
+            alert("收货人不能为空!");
+        }
+        if($scope.entity.address == null || $scope.entity.address == "") {
+            alert("详细地址不能为空!")
+        }
+        //定义手机号码正则表达式
+        var mobile = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
+        //判断手机号码格式是否正确
+        if(!mobile.test($scope.entity.mobile)) {
+            alert("请输入正确的手机号码!");
+            return;
+        }
         var url = "saveAddress";
         if($scope.entity.id) {
             url = "updateAddress"
@@ -95,7 +110,7 @@ app.controller('addressController',function ($scope,$controller,baseService) {
                 }else {
                     alert("地址添加失败!")
                 }
-            })
+            });
     };
 
     /**
@@ -106,6 +121,7 @@ app.controller('addressController',function ($scope,$controller,baseService) {
         if(isDefault == "1") {
             alert("默认地址不能删除!");
         }else {//不是默认地址
+            confirm("确定要删除当前地址吗?");
             baseService.sendGet("/user/deleteAddress?id=" + id)
                 .then(function (response) {
                     if(response.data) {
@@ -117,5 +133,28 @@ app.controller('addressController',function ($scope,$controller,baseService) {
                     }
                 });
         }
-    }
+    };
+
+    /**
+     * 设置默认地址
+     */
+    $scope.setDefaultAddress = function (AddressId,status) {
+        baseService.sendGet("/user/setDefaultAddress?id=" + AddressId +"&isDefault="+status)
+            .then(function (response) {
+                if(response.data) {
+                    alert("设置成功!");
+                    //默认地址要显示在第一行数据,重新查新地址列表
+                    $scope.findAddressByUser();
+                }else {
+                    alert("设置失败!");
+                }
+            });
+    };
+
+    /**
+     *地址别名点击事件方法
+     */
+    $scope.setAlias = function (value) {
+        $scope.entity.alias = value;
+    };
 });
