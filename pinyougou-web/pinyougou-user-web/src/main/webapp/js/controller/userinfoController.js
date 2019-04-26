@@ -39,8 +39,10 @@ app.controller('userinfoController', function($scope,$controller,baseService,$fi
                     //$scope.userInfo.address = JSON.parse(resp.data.address);
                     // 格式化日期
                     $scope.userInfo.birthday =  $filter('date')($scope.userInfo.birthday, "yyyy-MM-dd");
+                    return $scope.userInfo.headPic;
                 }
             });
+
     };
 
     //更新资料

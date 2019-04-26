@@ -137,5 +137,19 @@ public class UserInfoController {
         return data;
     }
 
+    //获取头像地址和昵称
+    @GetMapping("/getHead")
+    public Map<String,String> getHead(String username){
+        try {
+            User user = userService.getHeadByUsername(username);
+            Map<String,String> map = new HashMap<>();
+            map.put("headPic",user.getHeadPic());
+            map.put("nickName",user.getNickName());
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

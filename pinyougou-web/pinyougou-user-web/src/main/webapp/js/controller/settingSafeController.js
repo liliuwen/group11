@@ -1,18 +1,9 @@
 //用户安全管理控制器
 app.controller('settingSafeController', function($scope,$controller,baseService) {
 
+    $controller('indexController',{$scope:$scope});
+
     $scope.user = {username:'',password:''};
-
-    /** 定义获取登录用户名方法 */
-    $scope.showName = function(){
-
-        //定义重定向地址
-        $scope.redirectUrl = window.encodeURIComponent(location.href);
-        baseService.sendGet("/user/showName")
-            .then(function(response){
-                $scope.loginName = response.data.loginName;
-            });
-    };
 
     //修改密码
     $scope.updatePwd = function () {

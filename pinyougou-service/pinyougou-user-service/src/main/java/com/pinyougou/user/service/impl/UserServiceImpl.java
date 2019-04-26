@@ -248,4 +248,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public User getHeadByUsername(String username){
+        User user = new User();
+        user.setUsername(username);
+        User user1 = userMapper.selectOne(user);
+        return user1;
+    }
+
 }
