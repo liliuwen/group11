@@ -16,7 +16,7 @@
 	<script src="/js/controller/addressController.js"></script>
 
 </head>
-<body ng-app="pinyougou" ng-controller="addressController" ng-init="findAddressByUser();">
+<body ng-app="pinyougou" ng-controller="addressController" ng-init="findAddressByUser();showName();">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -167,9 +167,10 @@ $(function(){
                 <div class="yui3-u-1-6 list">
 
                     <div class="person-info">
-                        <div class="person-photo"><img src="img/_/photo.png" alt=""></div>
+                        <div class="person-photo"><img style="width: 50px;height: 50px;border-radius: 25px;"
+													   src="{{headPic?headPic:'img/_/photo.png'}}" alt=""></div>
                         <div class="person-account">
-                            <span class="name">Michelle</span>
+                            <span class="name">{{nickName}}</span>
                             <span class="safe">账户安全</span>
                         </div>
                         <div class="clearfix"></div>
