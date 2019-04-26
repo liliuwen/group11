@@ -50,5 +50,5 @@ public interface AddressService {
 	/** 设置默认地址 */
     void setDefaultAddress(String loginName, Long id, String status);
 
-    List<Provinces> findProvinceByProvinceId(String provinceId);
+
 }
