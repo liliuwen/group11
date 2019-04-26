@@ -213,4 +213,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**  修改内容 */
+    @Override
+    public void updateByUserInfo(User user) {
+        try {
+            if (user.getId() == null) {
+                throw new RuntimeException("没有找到ID的值");
+            }
+            int count = userMapper.updateByPrimaryKeySelective(user);
+            if (count>1) {
+                throw new RuntimeException("修改行数超过1,操作影响行数为"+count);
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("修改异常!");
+        }
+    }
+
 }
