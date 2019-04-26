@@ -203,7 +203,6 @@
     }
 </script>
 
-
 </body>
 <!--header-->
 <div id="account">
@@ -328,28 +327,31 @@
 
                                 <div class="control-group">
                                     <label for="inputPassword" class="control-label">验证方式：</label>
-                                    <div class="controls fixed">手机验证（138****9856）</div>
+                                    <div class="controls fixed">手机验证<input type="text" ng-model="bindTelInfo.telNo" /></div>
                                 </div>
                                 <div class="control-group">
                                     <label for="inputcode" class="control-label">验证码：</label>
                                     <div class="controls">
-                                        <input name="inputcode" type="text" id="inputcode">
+                                        <input id="inputcode" ng-model="bindTelInfo.picCode" type="text" name="code"/>
                                     </div>
                                     <div class="controls">
-                                        验证码
+                                        <img src="/user/verify" alt="验证码"/>
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label for="inputRepassword" class="control-label">短信验证码：</label>
                                     <div class="controls">
-                                        <input name="msgcode" type="text" id="msgcode">
+                                        <input name="msgcode" ng-model="bindTelInfo.smsCode" type="text" id="msgcode">
                                     </div>
                                     <div class="controls">
-                                        <button class="sui-btn btn-info">发送</button>
+                                        <button class="sui-btn btn-info" ng-click="getSmsCode();">发送</button>
                                     </div>
                                 </div>
+                                <div>{{bindTelInfo}}</div>
                                 <div class="control-group next-btn">
-                                    <a class="sui-btn btn-primary" href="home-setting-address-phone.html">下一步</a>
+                                    <a class="sui-btn btn-primary"
+                                       href="home-setting-address-phone.html"
+                                        ng-click="sendCode();">下一步</a>
                                 </div>
                             </form>
                         </div>

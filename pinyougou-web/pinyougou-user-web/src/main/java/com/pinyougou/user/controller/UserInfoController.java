@@ -55,6 +55,7 @@ public class UserInfoController {
             map.put("profession",user.getProfession());
             map.put("headPic",user.getHeadPic());
             map.put("sex",user.getSex());
+            map.put("phone",user.getPhone());
             return map;
         } catch (Exception e) {
             e.printStackTrace();

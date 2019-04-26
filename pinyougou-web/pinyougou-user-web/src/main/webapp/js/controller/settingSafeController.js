@@ -3,7 +3,10 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
 
     $controller('indexController',{$scope:$scope});
 
+    //定义用户账户密码json对象
     $scope.user = {username:'',password:''};
+    //定义绑定手机数据
+    $scope.bindTelInfo = {};
 
     //修改密码
     $scope.updatePwd = function () {
