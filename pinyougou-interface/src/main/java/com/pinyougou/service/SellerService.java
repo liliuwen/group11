@@ -26,8 +26,7 @@ public interface SellerService {
 	/** 根据主键id查询 */
 	Seller findOne(Serializable id);
 
-	/** 查询全部 */
-	List<Seller> findAll();
+
 
 	/** 多条件分页查询 */
 	PageResult findByPage(Seller seller, int page, int rows);
@@ -40,4 +39,6 @@ public interface SellerService {
 
 	//修改密码
 	void updatePassword(String sellerId, String newPassword);
+
+	List<Seller> findAll(Seller seller);
 }

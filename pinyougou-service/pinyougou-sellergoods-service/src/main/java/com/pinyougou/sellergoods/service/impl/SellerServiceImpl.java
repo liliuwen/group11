@@ -8,8 +8,10 @@ import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.mapper.SellerMapper;
 import com.pinyougou.pojo.Seller;
 import com.pinyougou.service.SellerService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -67,8 +69,19 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<Seller> findAll() {
-        return null;
+    public List<Seller> findAll(Seller seller) {
+        try {
+            Example example = new Example(Seller.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andLike("name","%"+(seller.getName()==null?"":seller.getName())+"%");
+            criteria.andLike("nickName","%"+(seller.getNickName()==null?"":seller.getNickName())+"%");
+            if (!seller.getStatus().equals("-1")) {
+                criteria.andEqualTo("status",seller.getStatus());
+            }
+            return sellerMapper.selectByExample(example);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

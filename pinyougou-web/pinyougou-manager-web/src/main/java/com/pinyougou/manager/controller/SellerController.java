@@ -5,9 +5,9 @@ import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.pojo.Seller;
 import com.pinyougou.service.SellerService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 商家控制器
@@ -40,6 +40,16 @@ public class SellerController {
             ex.printStackTrace();
         }
         return sellerService.findByPage(seller, page, rows);
+    }
+
+    @PostMapping("/findAll")
+    public List<Seller> findAll(@RequestBody Seller seller){
+        try {
+            return sellerService.findAll(seller);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /** 商家审核 */

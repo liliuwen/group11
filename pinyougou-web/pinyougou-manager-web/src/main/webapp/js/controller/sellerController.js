@@ -4,6 +4,19 @@ app.controller('sellerController', function($scope, $controller, baseService){
     /** 指定继承baseController */
     $controller('baseController',{$scope:$scope});
 
+    $scope.sellerEntity = {};
+    $scope.syncEntity = {status:-1};
+
+    $scope.findAll = function () {
+       baseService.sendPost("/seller/findAll",$scope.syncEntity).then(function (resp) {
+           if (resp.data) {
+                $scope.sellerEntity = resp.data;
+           }else{
+               alert("查询失败")
+           }
+       }) ;
+    };
+
     /** 查询条件对象 */
     $scope.searchEntity = {status : '0'};
     /** 分页查询(查询条件) */
@@ -17,6 +30,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
                 $scope.paginationConf.totalItems = response.data.total;
             });
     };
+
     /** 显示修改 */
     $scope.show = function(entity){
         /** 把json对象转化成一个新的json对象 */
@@ -25,13 +39,15 @@ app.controller('sellerController', function($scope, $controller, baseService){
 
     /** 商家审核 */
     $scope.updateStatus = function (sellerId, status) {
+        var sellerStatus = ["待审核","已审核","审核未通过","关闭"];
         // 发送异步请求
         baseService.sendGet("/seller/updateStatus?sellerId="
             + sellerId + "&status=" + status).then(function(response){
                 // 获取响应数据
                 if (response.data){
                     // 重新加载数据
-                    $scope.reload();
+                    alert("成功将"+sellerId+"商家设置状态为"+sellerStatus[status]);
+                    $scope.findAll();
                 }else{
                     alert("审核失败！");
                 }
