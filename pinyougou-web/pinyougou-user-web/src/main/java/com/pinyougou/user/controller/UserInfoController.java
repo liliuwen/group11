@@ -1,13 +1,14 @@
 package com.pinyougou.user.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.io.FilenameUtils;
+import org.csource.fastdfs.ClientGlobal;
+import org.csource.fastdfs.StorageClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,9 @@ public class UserInfoController {
 
     @Reference
     private UserService userService;
+    /** 注入文件服务器访问地址 */
+    @Value("${fileServerUrl}")
+    private String fileServerUrl;
 
     /**修改用户个人信息*/
     @RequestMapping("/update")
@@ -49,12 +53,25 @@ public class UserInfoController {
             map.put("birthday",user.getBirthday());
             map.put("nickName",user.getNickName());
             map.put("profession",user.getProfession());
+            map.put("headPic",user.getHeadPic());
             map.put("sex",user.getSex());
             return map;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    //修改保存个人资料
+    @PostMapping("/sendApply")
+    public boolean sendApply(@RequestBody User user){
+        try {
+            userService.updateByUserInfo(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @GetMapping("/getProvince")
@@ -88,9 +105,37 @@ public class UserInfoController {
     }
 
     /** 上传头像 */
-    @RequestMapping("/upload")
-    public String uploadHead(){
-        return null;
+    @PostMapping("/upload")
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile multipartFile) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("status", 500);
+        try {
+            /** 加载配置文件，产生该文件绝对路径 */
+            String conf_filename = this.getClass()
+                    .getResource("/fastdfs_client.conf").getPath();
+            /** 初始化客户端全局对象 */
+            ClientGlobal.init(conf_filename);
+            /** 创建存储客户端对象 */
+            StorageClient storageClient = new StorageClient();
+            /** 获取原文件名 */
+            String originalFilename =
+                    multipartFile.getOriginalFilename();
+            /** 上传文件到FastDFS服务器 */
+            String[] arr = storageClient
+                    .upload_file(multipartFile.getBytes(),
+                            FilenameUtils.getExtension(originalFilename), null);
+            /** 拼接返回的 url 和 ip 地址，拼装成完整的 url */
+            StringBuilder url = new StringBuilder(fileServerUrl);
+            for (String str : arr){
+                url.append("/" + str);
+            }
+            data.put("status", 200);
+            data.put("url", url.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
     }
+
 
 }

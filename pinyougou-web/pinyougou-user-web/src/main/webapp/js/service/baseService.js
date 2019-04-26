@@ -59,7 +59,7 @@ app.service('baseService', function($http){
         // 发送异步请求
         return $http({
             method : 'post', // 请求方式
-            url : '/upload', // 请求URL
+            url : '/user/info/upload', // 请求URL
             data : formData, // 表单数据对象
             headers : {"Content-Type": undefined}, // 设置请求头
             transFormRequest : angular.identity // 转换表单请求(把文件转化成字节)

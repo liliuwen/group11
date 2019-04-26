@@ -47,4 +47,5 @@ public interface UserService {
 
 	List<Map<String, String>> findAreaByCity(String areaId);
 
+    void updateByUserInfo(User user);
 }

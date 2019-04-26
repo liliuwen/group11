@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
             // 修改时间
             user.setUpdated(user.getCreated());
 
-
             Example example =new Example(User.class);
 
             Example.Criteria criteria = example.createCriteria();
@@ -230,6 +229,22 @@ public class UserServiceImpl implements UserService {
             return data;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**  修改内容 */
+    @Override
+    public void updateByUserInfo(User user) {
+        try {
+            if (user.getId() == null) {
+                throw new RuntimeException("没有找到ID的值");
+            }
+            int count = userMapper.updateByPrimaryKeySelective(user);
+            if (count>1) {
+                throw new RuntimeException("修改行数超过1,操作影响行数为"+count);
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("修改异常!");
         }
     }
 
