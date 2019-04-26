@@ -3,7 +3,10 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
 
     $controller('indexController',{$scope:$scope});
 
+    //定义用户账户密码json对象
     $scope.user = {username:'',password:''};
+    //定义绑定手机数据
+    $scope.bindTelInfo = {};
 
     //修改密码
     $scope.updatePwd = function () {
@@ -20,5 +23,30 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
             }
         });
     };
+
+    //获取用户的手机号
+    $scope.getUserPhoneNo = function () {
+        baseService.sendGet("/user/info/get").then(function (respose){
+            if (respose.data != null){
+                $scope.bindTelInfo.user = "";
+            }
+        });
+    };
+
+    //发送验证码进行判断***
+    $scope.sendCode = function () {
+        //设置验证码结果默认为false
+        $scope.bool = false;
+        $scope.bindTelInfo = JSON.stringify($scope.bindTelInfo);
+        baseService.sendPost("/user/checkCodes" + $scope.bindTelInfo).then(function (response) {
+            $scope.bool = response.data;
+            if (bool){
+                $scope.bool = true;
+            }else {
+                bool = false;
+                alert("验证码不正确！")
+            }
+        })
+    }
 
 });
