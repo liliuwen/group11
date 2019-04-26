@@ -74,6 +74,15 @@ public class User implements Serializable{
     public void setProfession(String profession) {
         this.profession = profession;
     }
+	private String rePassword;
+
+    public String getRePassword() {
+        return rePassword;
+    }
+
+    public void setRePassword(String rePassword) {
+        this.rePassword = rePassword;
+    }
 
     public Long getId() {
         return id;

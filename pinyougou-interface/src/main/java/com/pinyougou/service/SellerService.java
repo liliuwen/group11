@@ -33,5 +33,11 @@ public interface SellerService {
 	PageResult findByPage(Seller seller, int page, int rows);
 
 	/** 商家审核 */
-    void updateStatus(String sellerId, String status);
+	void updateStatus(String sellerId, String status);
+
+	//查询原来的密码
+	String findOldPassword(String sellerId);
+
+	//修改密码
+	void updatePassword(String sellerId, String newPassword);
 }

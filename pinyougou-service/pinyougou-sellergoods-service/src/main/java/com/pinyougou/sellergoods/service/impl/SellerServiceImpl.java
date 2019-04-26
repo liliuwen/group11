@@ -31,20 +31,24 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public void save(Seller seller) {
-        try{
+        try {
             // 审核状态：未审核
             seller.setStatus("0");
             // 创建时间
             seller.setCreateTime(new Date());
             sellerMapper.insertSelective(seller);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
     public void update(Seller seller) {
-
+        try {
+            sellerMapper.updateByPrimaryKeySelective(seller);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -69,27 +73,53 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public PageResult findByPage(Seller seller, int page, int rows) {
-        try{
+        try {
             // 开始分页
             PageInfo<Seller> pageInfo = PageHelper.startPage(page, rows)
                     .doSelectPageInfo(new ISelect() {
-                @Override
-                public void doSelect() {
-                    sellerMapper.findAll(seller);
-                }
-            });
+                        @Override
+                        public void doSelect() {
+                            sellerMapper.findAll(seller);
+                        }
+                    });
             return new PageResult(pageInfo.getTotal(), pageInfo.getList());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * 商家审核
+     */
+    public void updateStatus(String sellerId, String status) {
+        try {
+            sellerMapper.updateStatus(sellerId, status);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    //查询原来的密码
+    @Override
+    public String findOldPassword(String sellerId) {
+        try {
+          String password = sellerMapper.findOldPassword(sellerId);
+          return password;
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
     }
 
-    /** 商家审核 */
-    public void updateStatus(String sellerId, String status){
-        try{
-            sellerMapper.updateStatus(sellerId, status);
+
+    //修改密码
+    @Override
+    public void updatePassword(String sellerId, String newPassword) {
+        try {
+            sellerMapper.updatePassword(sellerId,newPassword);
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
     }
+
+
 }

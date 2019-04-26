@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.*;
@@ -68,7 +69,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(User user) {
+        try{
+            // 密码加密
+            user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+            // 创建时间
+            user.setCreated(new Date());
+            // 修改时间
+            user.setUpdated(user.getCreated());
 
+
+            Example example =new Example(User.class);
+
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("username",user.getUsername());
+
+            // 添加数据
+            int i = userMapper.updateByExampleSelective(user, example);
+
+        } catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
