@@ -100,7 +100,6 @@ app.controller('userinfoController', function($scope,$controller,baseService,$fi
     });
 
     $scope.$watch('Local2.id',function (newVal, oldVal) {
-        if (newVal) {
             $scope.LocalJson.city = newVal;
             baseService.sendGet("http://user.pinyougou.com/user/info/getAreas?cityId=" + newVal)
                 .then(function (resp) {
@@ -108,7 +107,6 @@ app.controller('userinfoController', function($scope,$controller,baseService,$fi
                         $scope.Local3.opt = resp.data;
                     }
                 });
-        }
     });
 
     $scope.$watch('Local3.id',function (newVal, oldVal) {
@@ -128,6 +126,7 @@ app.controller('userinfoController', function($scope,$controller,baseService,$fi
                baseService.sendPost("http://user.pinyougou.com/user/info/sendApply",$scope.uploadPic)
                    .then(function (resp) {
                        alert("上传成功！");
+                       location.reload(true);
                        $scope.userInfo.headPic = $scope.uploadPic.headPic;
                    });
             }else{

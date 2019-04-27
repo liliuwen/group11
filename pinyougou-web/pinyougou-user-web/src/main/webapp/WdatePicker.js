@@ -371,7 +371,7 @@ var $dp, WdatePicker;
             F.skin = E.skin;
             var G = ["<head><script>", "var $d, $dp, $cfg=document.cfg, $pdp = parent.$dp, $dt, $tdt, $sdt, $lastInput, $IE=$pdp.ie, $FF = $pdp.ff,$OPERA=$pdp.opera, $ny, $cMark = false;", "if($cfg.eCont){$dp = {};for(var p in $pdp)$dp[p]=$pdp[p];}else{$dp=$pdp;};for(var p in $cfg){$dp[p]=$cfg[p];}", "document.oncontextmenu=function(){try{$c._fillQS(!$dp.has.d,1);showB($d.qsDivSel);}catch(e){};return false;};", "</script><script src=", A, "lang/", H.name, ".js charset=", H.charset, "></script>"];
             for (var I = 0; I < C.length; I++) if (C[I].name == E.skin) G.push("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + A + "skin/" + C[I].name + "/datepicker.css\" charset=\"" + C[I].charset + "\"/>");
-            G.push("<script type=\"text/javascript\" src=" + A + "\"../calendar.js?\"+Math.random()+\" charset=\"gb2312\"></script>");
+            G.push("<script type=\"text/javascript\" src=\"" + A + "calendar.js?\"+Math.random()+\" charset=\"gb2312\"></script>");
             G.push("</head><body leftmargin=\"0\" topmargin=\"0\" tabindex=0></body></html>");
             G.push("<script>var t;t=t||setInterval(function(){if(document.ready){new My97DP();$cfg.onload();$c.autoSize();$cfg.setPos($dp);clearInterval(t);}},20);if($FF||$OPERA)document.close();</script>");
             E.setPos = B;

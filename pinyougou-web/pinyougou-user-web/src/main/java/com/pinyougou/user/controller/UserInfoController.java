@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/user/info")
 public class UserInfoController {
 
-    @Reference
+    @Reference(timeout = 5000)
     private UserService userService;
     /** 注入文件服务器访问地址 */
     @Value("${fileServerUrl}")
