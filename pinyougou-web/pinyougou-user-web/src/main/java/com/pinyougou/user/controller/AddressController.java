@@ -118,12 +118,4 @@ public class AddressController {
         }
         return false;
     }
-
-    /**
-     * 根据省ID查询省
-     */
-    @GetMapping("/user/findProviceByProviceId")
-    public List<Provinces> findProvinceByProvinceId(String proviceId){
-      return addressService.findProvinceByProvinceId(proviceId);
-    }
 }
