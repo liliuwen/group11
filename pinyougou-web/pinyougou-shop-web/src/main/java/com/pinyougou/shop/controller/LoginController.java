@@ -67,8 +67,6 @@ public class LoginController {
         }
         return "redirect:/shoplogin.html";
     }
-
-
     /** 获取登录用户名 */
     @GetMapping("/showLoginName")
     @ResponseBody

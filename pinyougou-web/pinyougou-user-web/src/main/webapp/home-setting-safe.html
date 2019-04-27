@@ -20,7 +20,7 @@
 </head>
 <body ng-app="pinyougou"
       ng-controller="settingSafeController"
-      ng-init="showName();">
+      ng-init="showName();getUsername();">
 <!-- 头部栏位 -->
 <!--页面顶部-->
 <div id="nav-bottom">
@@ -163,39 +163,37 @@
             $('#inputRepassword').val('');
         } else {
             $('#subInfo').removeAttr("disabled");
-            $('#inputPassword').val('');
-            $('#inputRepassword').val('');
         }
     }
 
     //检查密码是否一致
     function checkPwd() {
-//密码正则表达式
+        //密码正则表达式
         var reg = /^[\w_-]{6,16}$/;
-//trim函数的作用是去除空格
+        //trim函数的作用是去除空格
         var pwd = $.trim($('#inputPassword').val());
         var rpwd = $.trim($("#inputRepassword").val());
 
-//校验密码只能输入6-16(包含大小写字母，数字，- 或者 _ )
+        //校验密码只能输入6-16(包含大小写字母，数字，- 或者 _ )
         if (!reg.exec(pwd)) {
             $("#msg_pwd").html("&nbsp;&nbsp;<font color='red'>密码格式不正确</font>");
             return false;
         }
         if (rpwd != "") {
             if (pwd == "" && rpwd == "") {
-//若都为空，则提示密码不能为空，为了用户体验（在界面上用required同时做了处理）
+                //若都为空，则提示密码不能为空，为了用户体验（在界面上用required同时做了处理）
                 $("#msg_pwd").html("&nbsp;&nbsp;<font color='red'>密码不能为空</font>");
-// alert("密码不能为空:false");
+                // alert("密码不能为空:false");
                 return false;
             }
             else {
                 if (pwd == rpwd) {//相同则提示密码匹配
                     $("#msg_pwd").html("&nbsp;&nbsp;<img src='img/true.jpg' width='20' height='21'/>");
-// alert("密码匹配正确:true");
+                    // alert("密码匹配正确:true");
                     return true;
                 } else {//不相同则提示密码匹配
                     $("#msg_pwd").html("&nbsp;&nbsp;<font color='red'>密码不一致</font>");
-// alert("密码不一致:false");
+                    // alert("密码不一致:false");
                     return false;
                 }
             }
@@ -212,7 +210,8 @@
             <div class="yui3-u-1-6 list">
 
                 <div class="person-info">
-                    <div class="person-photo"><img style="width: 50px;height: 50px;border-radius: 25px;" src="{{headPic}}" alt=""></div>
+                    <div class="person-photo"><img style="width: 50px;height: 50px;border-radius: 25px;"
+                                                   src="{{headPic}}" alt=""></div>
                     <div class="person-account">
                         <span class="name">{{nickName}}</span>
                         <span class="safe"><a href="/logout">退出登录 </a></span>
@@ -327,12 +326,13 @@
 
                                 <div class="control-group">
                                     <label for="inputPassword" class="control-label">验证方式：</label>
-                                    <div class="controls fixed">手机验证<input type="text" ng-model="bindTelInfo.telNo" /></div>
+                                    <div class="controls fixed">手机验证{{user.phone}}
+                                    </div>
                                 </div>
                                 <div class="control-group">
                                     <label for="inputcode" class="control-label">验证码：</label>
                                     <div class="controls">
-                                        <input id="inputcode" ng-model="bindTelInfo.picCode" type="text" name="code"/>
+                                        <input id="inputcode" ng-model="codes.picCode" type="text" name="code"/>
                                     </div>
                                     <div class="controls">
                                         <img src="/user/verify" alt="验证码"/>
@@ -341,18 +341,16 @@
                                 <div class="control-group">
                                     <label for="inputRepassword" class="control-label">短信验证码：</label>
                                     <div class="controls">
-                                        <input name="msgcode" ng-model="bindTelInfo.smsCode" type="text" id="msgcode">
+                                        <input name="msgcode" ng-model="codes.smsCode" type="text" id="msgcode">
                                     </div>
                                     <div class="controls">
                                         <button class="sui-btn btn-info" ng-click="getSmsCode();">发送</button>
                                     </div>
                                 </div>
-                                <div>{{bindTelInfo}}</div>
                                 <div class="control-group next-btn">
-                                    <a class="sui-btn btn-primary"
-                                       href="home-setting-address-phone.html"
-                                        ng-click="sendCode();">下一步</a>
-                                </div>
+                                    <button class="sui-btn btn-primary"
+                                       ng-click="checkCodes();">下一步</button>&nbsp;&nbsp;<span ng-model="msgInfo"></span>
+                                </div><div>{{codes}}</div>
                             </form>
                         </div>
                     </div>

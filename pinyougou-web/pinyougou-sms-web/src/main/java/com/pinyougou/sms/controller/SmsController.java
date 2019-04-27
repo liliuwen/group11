@@ -2,6 +2,7 @@ package com.pinyougou.sms.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.service.SmsService;
+import com.pinyougou.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +26,9 @@ public class SmsController {
 
     /** 短信发送接口 */
     @PostMapping("/sendSms")
-    public Map<String, Object> sendSms(String phone, String signName,
-                                       String templateCode, String templateParam){
+    public Map<String, Object> sendSms(String phone, String signName,String templateCode,String templateParam){
         // 调用短信服务接口
-        boolean success = smsService.sendSms(phone, signName, templateCode, templateParam);
+        boolean success = smsService.sendSms(phone,signName,templateCode,templateParam);
         System.out.println("success = " + success);
         Map<String, Object> data = new HashMap<>();
         data.put("success", success);

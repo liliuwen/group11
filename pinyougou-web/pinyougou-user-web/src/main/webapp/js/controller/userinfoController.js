@@ -42,7 +42,6 @@ app.controller('userinfoController', function($scope,$controller,baseService,$fi
                     return $scope.userInfo.headPic;
                 }
             });
-
     };
 
     //更新资料
