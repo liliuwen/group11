@@ -84,7 +84,7 @@
 				<div class="cart-item-list" ng-repeat="cart in carts">
 					<div class="cart-shop">
 						<input type="checkbox"
-							   ng-checked="x"
+							   ng-checked="seller"
 							   ng-click="updateSelection($event,cart)"
 							   />
 						<span class="shopname self">{{cart.sellerName}}</span>
@@ -95,8 +95,7 @@
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">
 									<input type="checkbox"
-										   ng-model="z"
-										   ng-checked="y.{{cart.sellerId}}"
+										   ng-checked="opc.{{cart.sellerId}}"
 										   ng-click="oneSelection($event,orderItem)"/>
 								</li>
 								<li class="yui3-u-11-24">

@@ -124,9 +124,9 @@ app.controller('userinfoController', function($scope,$controller,baseService,$fi
                $scope.uploadPic.id = $scope.userInfo.id;
                baseService.sendPost("http://user.pinyougou.com/user/info/sendApply",$scope.uploadPic)
                    .then(function (resp) {
-                       alert("上传成功！");
-                       location.reload(true);
+                       alert("上传成功！"+$scope.uploadPic.headPic);
                        $scope.userInfo.headPic = $scope.uploadPic.headPic;
+                       location.reload(true);
                    });
             }else{
                 alert("上传失败！");

@@ -42,9 +42,9 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
     //下一步按钮
     $scope.checkCodes = function(){
         // alert("----------");
-        alert("======1111========");
+
         alert($scope.checkPicCode().val());
-        alert("======2222========");
+
     };
     //图片验证码判断
     $scope.checkPicCode = function () {
@@ -66,27 +66,27 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
         }
     };
 
-    //验证码判断
-    // $scope.checkSmsCode = function () {
-    //     //获取用户输入的短信验证码
-    //     if ($scope.codes.smsCode != "") {
-    //         // alert($scope.user.username);
-    //         baseService.sendPost("/user/setting/checkSmsCode?smsCode=" + smsCode ,$scope.user)
-    //             .then(function (response) {
-    //                 if (response.data) {
-    //                     location.href(href = "home-setting-address-phone.html");
-    //                     smsCode = '';
-    //                     return true;
-    //                 } else {
-    //                     alert("验证码不正确！");
-    //                     location.reload(true);
-    //                     return false;
-    //                 }
-    //             })
-    //     }else {
-    //         $scope.msgInfo.html("<font color='red'>短信验证码不能为空！</font>");
-    //     }
-    // };
+    // 验证码判断
+    $scope.checkSmsCode = function () {
+        //获取用户输入的短信验证码
+        if ($scope.codes.smsCode != "") {
+            // alert($scope.user.username);
+            baseService.sendPost("/user/setting/checkSmsCode?smsCode=" + smsCode ,$scope.user)
+                .then(function (response) {
+                    if (response.data) {
+                        location.href(href = "home-setting-address-phone.html");
+                        smsCode = '';
+                        return true;
+                    } else {
+                        alert("验证码不正确！");
+                        location.reload(true);
+                        return false;
+                    }
+                })
+        }else {
+            $scope.msgInfo.html("<font color='red'>短信验证码不能为空！</font>");
+        }
+    };
 
     //获取同户信息
     $scope.getUserInfo = function () {
