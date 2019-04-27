@@ -1,5 +1,6 @@
 package com.pinyougou.service;
 
+import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.pojo.OrderItem;
 import java.util.List;
 import java.io.Serializable;
@@ -29,6 +30,6 @@ public interface OrderItemService {
 	List<OrderItem> findAll();
 
 	/** 多条件分页查询 */
-	List<OrderItem> findByPage(OrderItem orderItem, int page, int rows);
+	PageResult findByPage(OrderItem orderItem, int page, int rows);
 
 }
