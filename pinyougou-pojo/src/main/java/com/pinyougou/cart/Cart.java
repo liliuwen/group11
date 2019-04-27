@@ -19,6 +19,7 @@ public class Cart implements Serializable{
     private String sellerName;
     /** 购物车明细集合 */
     private List<OrderItem> orderItems;
+
     /** setter and getter method */
     public String getSellerId() {
         return sellerId;

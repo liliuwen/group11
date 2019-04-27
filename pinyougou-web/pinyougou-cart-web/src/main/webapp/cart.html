@@ -5,6 +5,7 @@
 	<title>我的购物车</title>
     <link rel="stylesheet" type="text/css" href="/css/webbase.css"/>
 	<link rel="stylesheet" type="text/css" href="/css/pages-cart.css"/>
+	<script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
 
 	<script src="/plugins/angularjs/angular.min.js"></script>
 	<script src="/js/base.js"></script>
@@ -72,7 +73,7 @@
 			<div class="cart-main">
 				<div class="yui3-g cart-th">
 					<div class="yui3-u-1-4"><input type="checkbox"
-												   ng-model="master" ng-click="all($event,carts)" /> 全部</div>
+												   ng-model="master" ng-click="all($event,carts,$index)" /> 全部</div>
 					<div class="yui3-u-1-4">商品</div>
 					<div class="yui3-u-1-8">单价（元）</div>
 					<div class="yui3-u-1-8">数量</div>
@@ -83,7 +84,8 @@
 				<div class="cart-item-list" ng-repeat="cart in carts">
 					<div class="cart-shop">
 						<input type="checkbox"
-							   ng-model="x" ng-checked="master" ng-click="updateSelection($event,cart.sellerName)"
+							   ng-checked="x"
+							   ng-click="updateSelection($event,cart)"
 							   />
 						<span class="shopname self">{{cart.sellerName}}</span>
 					</div>
@@ -92,9 +94,10 @@
 						<div class="cart-list" ng-repeat="orderItem in cart.orderItems" >
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">
-									<input type="checkbox" ng-model="y"
-										   ng-check="x"
-										   ng-click="oneSelection($event,orderItem.itemId,orderItem.num,orderItem.totalFee)"/>
+									<input type="checkbox"
+										   ng-model="z"
+										   ng-checked="y.{{cart.sellerId}}"
+										   ng-click="oneSelection($event,orderItem)"/>
 								</li>
 								<li class="yui3-u-11-24">
 									<div class="good-item">
@@ -150,7 +153,7 @@
 						<span><em>已节省：</em><i>-¥20.00</i></span>
 					</div>
 					<div class="sumbtn">
-						<a class="sum-btn" href="/order/getOrderInfo.html" target="_blank">结算</a>
+						<a class="sum-btn" ng-click="payHtml()" target="_blank">结算</a>
 					</div>
 				</div>
 			</div>

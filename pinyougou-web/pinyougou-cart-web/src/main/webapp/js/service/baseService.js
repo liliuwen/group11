@@ -18,6 +18,7 @@ app.service('baseService', function($http){
         }
     };
 
+
     /** 根据主键id查询 */
     this.findOne = function(url, id){
         return this.sendGet(url, "id=" + id);

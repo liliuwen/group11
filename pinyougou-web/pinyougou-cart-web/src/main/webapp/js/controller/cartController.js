@@ -1,11 +1,11 @@
 // 定义购物车的控制器
-app.controller('cartController', function ($scope, $controller, baseService) {
+app.controller('cartController', function ($scope,$controller, baseService) {
 
     // 继承baseController
     $controller('baseController', {$scope : $scope});
 
-    $scope.arrStr = [];
-    var sellerCartsData = [];
+    $scope.selected = [] ;//定义一个数组
+    $scope.y = {};
     // 查询购物车
     $scope.findCart = function () {
         baseService.sendGet("/cart/findCart").then(function(response){
@@ -13,7 +13,7 @@ app.controller('cartController', function ($scope, $controller, baseService) {
             $scope.carts = response.data;
             // 定义json对象封装统计的数据
             $scope.totalEntity = {totalNum : 0, totalMoney : 0};
-            $scope.payData();
+            $scope.arrStr = [];
         });
     };
 
@@ -38,114 +38,111 @@ app.controller('cartController', function ($scope, $controller, baseService) {
         }
     };
 
-
-    // $scope.selectOne = function ($event,itemId,num,totalFee) {
-    //     var data = {itemId : "", num : "", totalFee : ""};
-    //     if($event.target.checked){
-    //         data.itemId = itemId;
-    //         data.num = num;
-    //         data.totalFee = totalFee;
-    //         arrStr.push(data);
-    //         alert(JSON.stringify(arrStr));
-    //         $scope.totalEntity.totalNum += num;
-    //         $scope.totalEntity.totalMoney += totalFee;
-    //     }else {
-    //         var idx = arrStr.indexOf(itemId);
-    //         arrStr.splice(idx,1);
-    //         $scope.payData();
-    //         alert(JSON.stringify(arrStr));
-    //     }
-    // };
-
     $scope.payData = function () {
         $scope.totalEntity.totalNum = 0;
         $scope.totalEntity.totalMoney = 0;
-        for(var i = 0 ; i < $scope.arrStr.length ; i++){
-            $scope.totalEntity.totalNum += $scope.arrStr[i].num;
-            $scope.totalEntity.totalMoney += $scope.arrStr[i].totalFee;
+        for(var i = 0 ; i < $scope.selected.length ; i++){
+            $scope.totalEntity.totalNum += $scope.selected[i].num;
+            $scope.totalEntity.totalMoney += $scope.selected[i].totalFee;
         }
     };
 
-    $scope.selectCart = function ($event,sellerName) {
 
-    };
-
-//checkbox全选单选
-    $scope.selected = [] ;//定义一个数组
     //全选方法，并将所有的id一并传入selected数组中
     $scope.all = function($event,data){
         var checkbox = $event.target ;
         var checked = checkbox.checked ;
         if(checked){
             $scope.x = true;
-            $scope.y = true;
-            for(var key in data){
-                if($scope.selected.indexOf(data[key].sellerName)>=0){//判断数组中是否重复存在
-                    continue;
-                }else{
-                    $scope.selected.push(data[key].sellerName);
+            $scope.z = true;
+            for(var i = 0;i < data.length ; i++){
+                for(var j = 0;j < data[i].orderItems.length; j++){
+                    if($scope.selected.indexOf(data[i].orderItems[j])>=0){//判断数组中是否重复存在
+                        continue;
+                    }else{
+                        $scope.selected.push(data[i].orderItems[j]);
+                    }
                 }
             }
-            console.log($scope.selected);
-            console.log($scope.arrStr);
         }
         else{
             $scope.x = false;
-            $scope.y = false;
+            $scope.z = false;
             $scope.selected=[];
         }
+        $scope.payData();
+        console.log($scope.selected);
     };
 
-    $scope.updateSelection = function($event,sellerName){ //单选更新selected
+
+    //商家更新selected
+    $scope.updateSelection = function($event,cart){
         var checkbox = $event.target;
         var checked = checkbox.checked ;
         if(checked){
-            $scope.selected.push(sellerName);
-            $scope.y = true;
-        }else{
-                var idx = $scope.selected.indexOf(sellerName) ;
-                $scope.selected.splice(idx,1);
-            $scope.y = false;
+            $scope.y[cart.sellerId] = true ;
+            for(var i = 0; i < cart.orderItems.length ; i++){
+                if($scope.selected.indexOf(cart.orderItems[i]) >= 0){
+                    continue;
+                }else {
+                    $scope.selected.push(cart.orderItems[i]);
+                }
             }
+        }else{
+            $scope.y[cart.sellerId] = false ;
+            for(var i = 0; i < cart.orderItems.length; i++){
+                    var idx = $scope.selected.indexOf(cart.orderItems[i]);
+                    $scope.selected.splice(idx,1);
+                }
+            }
+        $scope.payData();
         console.log($scope.selected);
-        };
+        console.log($scope.y);
+    };
 
-
-
-    $scope.oneSelection = function ($event,itemId,num,totalFee) {
+    //单选更新selected
+    $scope.oneSelection = function ($event,orderItem) {
         var checkbox = $event.target;
         var checked = checkbox.checked;
-        if($scope.y == true){
-            checked = checked;
-        }
         if (checked) {
-            var data = {itemId: "", num: "", totalFee: ""};
-            data.itemId = itemId;
-            data.num = num;
-            data.totalFee = totalFee;
-            $scope.arrStr.push(data);
-            alert(JSON.stringify($scope.arrStr));
-            $scope.totalEntity.totalNum += num;
-            $scope.totalEntity.totalMoney += totalFee;
+            if($scope.selected.indexOf(orderItem) < 0){
+                $scope.selected.push(orderItem);
+            }else {
+                return;
+            }
         } else {
-            var idx = $scope.arrStr.indexOf(itemId);
-            $scope.arrStr.splice(idx, 1);
-            $scope.payData();
-            alert(JSON.stringify($scope.arrStr));
+            var idx = $scope.selected.indexOf(orderItem);
+            $scope.selected.splice(idx, 1);
         }
+        $scope.payData();
+        console.log($scope.selected);
     };
 
     //批量删除
     $scope.seletedDelete = function(){
-        if($scope.arrStr.length == 0){
+        if($scope.selected.length == 0){
             alert("请选择要删除的商品")
         }else {
             if(confirm("确认删除？")){
-                for(var i = 0 ; i < $scope.arrStr.length ; i++){
-                    var num = -($scope.arrStr[i].num);
-                    $scope.addCart($scope.arrStr[i].itemId,num);
+                for(var i = 0 ; i < $scope.selected.length ; i++){
+                    var num = -($scope.selected[i].num);
+                    $scope.addCart($scope.selected[i].itemId,num);
                 }
             }
         }
+    };
+
+    $scope.payHtml = function () {
+        if($scope.selected.length == 0){
+            alert("请钩选要购买的商品");
+        }else {
+            location.href = "/order/getOrderInfo.html";
+        }
     }
+
+    $scope.findSeleted = function () {
+        baseService.send("/cart/findSeleted",$scope.selected).then(function (response) {
+            $scope.carts = response.data;
+        });
+    };
 });
