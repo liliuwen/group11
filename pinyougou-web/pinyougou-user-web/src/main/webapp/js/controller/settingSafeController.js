@@ -43,7 +43,7 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
     $scope.checkCodes = function(){
         // alert("----------");
         alert("======1111========");
-        $scope.checkPicCode();
+        alert($scope.checkPicCode().val());
         alert("======2222========");
     };
     //图片验证码判断
@@ -53,7 +53,6 @@ app.controller('settingSafeController', function($scope,$controller,baseService)
                 .then(function (response) {
                     if (!response.data.result) {
                         picResult = JSON.stringify(response.data.result);
-
                         return picResult;
                     } else {
                         picResult = JSON.stringify(response.data.result);

@@ -2,7 +2,7 @@
 app.controller('indexController', function ($scope, baseService,$controller,$location,$interval,$http) {
 
    // $controller('baseController', {$scope : $scope});
-    $controller('specificationController', {$scope : $scope});
+    //$controller('specificationController', {$scope : $scope});
 
     $scope.uname = "";
     /** 定义获取登录用户名方法 */
@@ -10,10 +10,10 @@ app.controller('indexController', function ($scope, baseService,$controller,$loc
         baseService.sendGet("/user/showName")
             .then(function(response){
                 $scope.loginName = response.data.loginName;
-                $scope.showHeadAndNickname();
                 $scope.getUserInfo();
+                $scope.showHeadAndNickname();
+                $scope.getName();
                 $scope.uname = $scope.loginName;
-                alert(uname);
             });
     };
 
