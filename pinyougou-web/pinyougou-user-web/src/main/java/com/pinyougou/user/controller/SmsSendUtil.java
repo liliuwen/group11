@@ -20,7 +20,7 @@ public class SmsSendUtil {
     private static final String DOMAIN = "dysmsapi.aliyuncs.com";
     // 签名KEY
 //    private static final String ACCESS_KEY_ID = "LTAIiKVKFzm3Vsri";
-    private static final String ACCESS_KEY_ID = "LTAIYb61CaIBAhXg";
+    private static final String ACCESS_KEY_ID = "123";
 
     // 签名密钥
     private static final String ACCESS_KEY_SECRET = "Ki5bcJAPqoVH2iyJZ4alIIue6Ks5rS";
